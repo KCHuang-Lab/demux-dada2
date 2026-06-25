@@ -44,8 +44,19 @@ Once seqeuncing data is back from Biohub, the first round of demultiplexing (bas
 
 
 ## Run on Sherlock using Singularity/Apptainer
-Add things here...
-
+### Setup:
+1. **Install Snakemake**: Either install Snakemake locally (this is easy with Conda, instructions are [here](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html)) or use someone else's installation.
+2. **Make a Temporary Copy of Code:** Copy the `/demux-dada2-files/` directory into $SCRATCH by running `cp -r /home/groups/kchuang/16s-demux-dada2/demux-dada2-files {temp $SCRATCH location}`.  The Singularity image is already built and located in $GROUP_HOME at `/home/groups/kchuang/16s-demux-dada2/demux-dada2-image.sif`, and you won't need to edit it or create a local copy.
+3. **Transfer in Inputs:** Move your fastqlist and sample sheet into the `config` directory, at `.../demux-dada2-files/16s-demux/config/`.
+4. **Update config.yaml:**  Replace the files names in lines 2 and 4 with the names of your fastqlist and samplesheet, which should be located in the `16s-demux/config/` directory already (step 4). The text editor vim is available in the Docker container. 
+### Test run:
+5. **Request Resources:** Run `sh_dev` to request additional resources. This will automatically give you one core and 4 GB memory for 1 hour, which is sufficient for the test analysis, but may not be enough for your full analysis. If you would like more cores, run `sh_dev -c N` for N cores or `sh_dev -t 02:00:00` for 2 hours rather than one. Additonal details on using a dev node are provided [here](https://www.sherlock.stanford.edu/docs/user-guide/running-jobs/#interactive-jobs).
+6. **Activate Snakemake:** Next activate Snakemake either by running `conda activate snakemake` or `conda activate {path to someone else's snakemake}`. Once activated, you should see `(snakemake)` prefacing the command prompt.
+7. **Test Dryrun:** Run a snakemake dry run for the test files to ensure that the environment is properly set up by running `snakemake -n -s test_Snakefile`.
+8. **Test Run:** After the dry run, run a real test run with the command `snakemake -s test_Snakefile --cores 1 --use-singularity`. Be sure not to use more cores that you have requested for your sh_dev session. The run should take less than 10 minutes with one core. 
+### Run real analysis
+9. **Real Run:** Once the test run has completed successfully, run a real run using `Snakefile` instead of `test_Snakefile`. To do this, use the command `snakemake --cores 1 --use-singularity`. The time for this run will depend on the resources available and the number of samples you have. If a submission runs out of time, you can resume from where it left off by first unlocking the snakemake pipeline: `snakemake --unlock` and then resuming: `snakemake --cores 1 --use-singularity --rerun-incomplete`.
+  
 ## Inputs
 In addition to the sequencing data itself, there are two input files needed for demultiplexing: a fastq file list, and a sample sheet. Additionally, the included config.yaml file will need to be edited.\
 
