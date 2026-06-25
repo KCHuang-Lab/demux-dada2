@@ -1,0 +1,108 @@
+Bootstrap: docker
+From: ubuntu:22.04
+
+
+# %setup section is used to import files from the host system that will then be used during the %post processing
+%setup
+    mkdir ${SINGULARITY_ROOTFS}/apptainer_test
+    cp ./install_packages_4_2_0.r ${SINGULARITY_ROOTFS}/apptainer_test/install_packages_4_2_0.r
+    cp ./requirements.txt ${SINGULARITY_ROOTFS}/apptainer_test/requirements.txt
+
+# %post section is used to define the steps that should be run during the build of the container image
+%post
+    ls /tmp
+    # Update package lists and install necessary dependencies
+    apt-get update && \
+    apt-get install -y \
+    build-essential \
+    wget \
+    xorg-dev \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    libxml2-dev \
+    gfortran \
+    libreadline-dev \
+    libbz2-dev \
+    liblzma-dev \
+    libpcre2-dev \
+    libharfbuzz-dev \
+    libfreetype6-dev \
+    libfribidi-dev \
+    libfontconfig1-dev \
+    libpng-dev \
+    libgit2-dev \
+    libtiff5-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    libgc-dev \
+    libwebp-dev \
+    python3-pip \
+    locales \
+    less \
+    grep \
+    vim \
+    nano \
+    # Additional dependencies can be added here as needed
+    apt-get clean
+
+    # Configure locale
+    locale-gen en_US.UTF-8
+    update-locale LANG=en_US.UTF-8
+    
+    # Install R version 4.2.0 from source
+    export R_VERSION=4.2.0
+    export R_PREFIX=/usr/local/R-${R_VERSION}
+
+    wget https://cran.r-project.org/src/base/R-4/R-${R_VERSION}.tar.gz && \
+        tar -xzvf R-${R_VERSION}.tar.gz && \
+        cd R-${R_VERSION} && \
+        ./configure --prefix=${R_PREFIX} && \
+        make && \
+        make install && \
+        rm -rf R-${R_VERSION}*
+
+    # Update PATH to include the newly installed R binaries
+    #export PATH="${R_PREFIX}:${PATH}"
+    #export PATH=$PATH:/R-4.2.0/bin
+    # Update PATH to include the newly installed R binaries
+    export PATH="${R_PREFIX}/bin:${PATH}"
+
+    # Create a default R library inside the container
+    mkdir -p /usr/local/R-${R_VERSION}/site-library
+
+    # Add container-specific default library path in Renviron.site
+    echo 'R_LIBS_SITE=/usr/local/R-4.2.0/site-library' >> /usr/local/R-${R_VERSION}/lib/R/etc/Renviron.site
+    echo 'R_LIBS_USER=/usr/local/R-4.2.0/site-library' >> /usr/local/R-${R_VERSION}/lib/R/etc/Renviron.site
+
+
+    # Install R packages into the site-library
+    Rscript -e "dir.create('/usr/local/R-4.2.0/site-library', showWarnings = FALSE, recursive = TRUE); \
+                .libPaths('/usr/local/R-4.2.0/site-library'); \
+                source('${SINGULARITY_ROOTFS}/apptainer_test/install_packages_4_2_0.r')"
+
+    # Install Python requirements (from requirements.txt)
+    pip3 install -r ${SINGULARITY_ROOTFS}/apptainer_test/requirements.txt
+
+    # Clean up
+    rm -rf /apptainer_test/*
+
+# %environment section is used to set environment variables that will be available when you enter the container
+%environment
+    #export PATH=$PATH:/R-4.2.0/bin
+    export PATH=/usr/local/R-4.2.0/bin:$PATH
+    export R_LIBS_USER=/usr/local/R-4.2.0/site-library
+    export R_LIBS_SITE=/usr/local/R-4.2.0/site-library
+    export LANG=en_US.UTF-8
+    export LC_ALL=en_US.UTF-8
+
+# %files section is used to copy files into the container image
+# %files
+#     ./16S-demux_edits [./16S-demux_edits]
+#     ./fastq_data [./fastq_data]
+#     ./databases [./databases]
+
+# %runscript section is used to define the default command or script when the container is executed with "apptainer run"
+%runscript
+    # The default entry point (this can be modified depending on what you want to run by default)
+    # exec /bin/bash "$@"
+    echo "Yay, you ran the container, way to go"
