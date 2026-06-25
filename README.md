@@ -13,11 +13,11 @@ The following document describes how to use the Docker and Singularity/Apptainer
 NONE OF THE LINKS BELOW ARE VALID!!! UPDATE!!!
 
 **Contents:**
-* [Overview] (https://github.com/KCHuang-Lab/CUPID-seq/blob/main/README.md#using-docker)
-* [Run locally using Docker](https://github.com/KCHuang-Lab/CUPID-seq/blob/main/README.md#using-docker)
-* [Run on Sherlock using Singularity/Apptainer](https://github.com/KCHuang-Lab/CUPID-seq/blob/main/README.md#using-singularityapptainer)
-* [Inputs](https://github.com/KCHuang-Lab/CUPID-seq/blob/main/README.md#inputs)
-* [Custom Primers](https://github.com/KCHuang-Lab/CUPID-seq/blob/main/README.md#custom-primers)
+* [Overview](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#overview)
+* [Run locally using Docker](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#overview)
+* [Run on Sherlock using Singularity/Apptainer](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#overview)
+* [Inputs](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#overview)
+* [Custom Primers](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#overview)
 
 
 ## Overview
