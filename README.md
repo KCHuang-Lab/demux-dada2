@@ -9,9 +9,6 @@ The following document describes how to use the Docker and Singularity/Apptainer
 <img align="center" src="https://github.com/KCHuang-Lab/CUPID-seq/blob/main/docs/images/CUPID-seq-logo.png?raw=true" alt="Alt Text" width="150" height="500" >
 
 
-
-NONE OF THE LINKS BELOW ARE VALID!!! UPDATE!!!
-
 **Contents:**
 * [Overview](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#overview)
 * [Run locally using Docker](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#run-locally-using-docker)
