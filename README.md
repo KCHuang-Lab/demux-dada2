@@ -14,10 +14,10 @@ NONE OF THE LINKS BELOW ARE VALID!!! UPDATE!!!
 
 **Contents:**
 * [Overview](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#overview)
-* [Run locally using Docker](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#overview)
-* [Run on Sherlock using Singularity/Apptainer](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#overview)
-* [Inputs](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#overview)
-* [Custom Primers](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#overview)
+* [Run locally using Docker](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#run-locally-using-docker)
+* [Run on Sherlock using Singularity/Apptainer](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#run-on-sherlock-using-singularity/apptainer)
+* [Inputs](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#inputs)
+* [Custom Primers](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#custom-primers)
 
 
 ## Overview
@@ -48,3 +48,129 @@ Once seqeuncing data is back from Biohub, the first round of demultiplexing (bas
 
 ## Run on Sherlock using Singularity/Apptainer
 
+## Inputs
+In addition to the sequencing data itself, there are two input files needed for demultiplexing: a fastq file list, and a sample sheet. Additionally, the included config.yaml file will need to be edited.\
+
+**Note:** Most common issues in demultiplexing arise from errors in the input files. To help with troubleshooting, a quick check of the inputs will be conducted as the first step of the pipeline, and a summary will be output to '16s-demux/workflow/out/inputCheck_log.txt' (or '16s-demux/workflow/test_out/inputCheck_log.txt' for tests). If you encounter errors during the actual run but not in the test run, it may be helpful to check this log to ensure the inputs are properly formatted.  
+
+1. **Fastq data:**\
+  **Names:** Sample names should not include any spaces, underscores, or periods (hyphens are fine). If they do, they should be renamed before demultiplexing.\
+   \
+  **Format:** Files should be formatted as gzipped fastq files, or “.fastq.gz” files.\
+   \
+  **Location:** If the demultiplexing will be run locally or on a server, fastq files just need to be somewhere on that server. The paths to fastq files are defined by the entries included in 
+the fastq file list and the config.yaml variable ‘fastqdir’. If the absolute path to the fastq files is provided in the fastq file list, then the fastqdir variable in config.yaml should be an empty string (“”). Otherwise, ensure that the ‘fastqdir’ path from config.yaml concatenated with the path in the fastq file list is correct.\
+\
+  For example, the file “/home/users/TEST/sequencing/exp01/fastqs/TEST_R1_001.fastq.gz” could be accurately described with the following combinations (and plenty others!):
+
+| fastqdir:	(set in config.yaml) |	fastq file list: | 
+| --- | --- |
+| “”	|	“/home/users/TEST/sequencing/exp01/fastqs/TEST_R1_001.fastq.gz” |
+| “/home/users/TEST/sequencing/exp01/fastqs/”	| “TEST_R1_001.fastq.gz” |
+
+__Note:__ Periods in the samplenames are okay for this demultiplexing process, but are not for downstream analysis with some tools including DADA2. 
+
+2. **Fastq file list:**\
+  **Location:** The fastq file list should be located within the ‘config’ directory, and the file name should be updated in the fastqlist field of the ‘config.yaml’ file, (unless it is named ‘fastq.txt’, which is the default).\
+   \
+   **Contents:** The fastq list should be a tab-delimited text file, with the first column including the path to read 1, the second column including the path to read 2, and the final column including the shortened file name. This table should have headers of ‘read1’, ‘read2’, and ‘file’. For the file name, we recommend a format such as “{RunName}-{round2plate}-{well}”, where ‘RunName’ can be anything without underscores, spaces, or periods, and the next two terms specify the plate identifier for the round 2 barcodes and the well number respectively. It is essential that the ‘file’ field in the fastq file list matches the first part of the ‘filename’ field in the Samplesheet.\
+   \
+  The fastq file list for the test files is shown below:
+
+| read1	|	read2	|	file |
+| ------| ---- | ---- |
+| ../fastq_data/test_inputs/KKRP-001_S441_R1_001.fastq.gz	| ../fastq_data/test_inputs/KKRP-001_S441_R2_001.fastq.gz | 15mc-003-P08B01-A01 |
+| ../fastq_data/test_inputs/KKRP-002_S442_R1_001.fastq.gz	| ../fastq_data/test_inputs/KKRP-002_S442_R2_001.fastq.gz	| 15mc-003-P08B01-A02 |
+| ../fastq_data/test_inputs/KKRP-003_S443_R1_001.fastq.gz	| ../fastq_data/test_inputs/KKRP-003_S443_R2_001.fastq.gz	| 15mc-003-P08B01-A03 |
+| ../fastq_data/test_inputs/KKRP-004_S444_R1_001.fastq.gz	| ../fastq_data/test_inputs/KKRP-004_S444_R2_001.fastq.gz	| 15mc-003-P08B01-A04 |
+
+
+3. **Samplesheet:**\
+   **Location:** The samplesheet should be included in the ‘config’ directory, the ‘samplesheet’ path in the ‘config.yaml’ file should be updated to reflect the samplesheet’s name, unless it has the default name ‘samplesheet.txt’.\
+   \
+  **Contents:** The sample sheet will contain metadata for all the samples as a tab-delimited table (.tsv or .txt). This file should contain a header as the first row, and must include the following columns: ‘filename’, ‘sample’, and ‘group’. Additional columns can be included in the table. For example, the test samplesheet has columns 'No',	'RunName',	'plate',	'platename',	'well',	'R1index/phase',	'R2 plate',	'our file name',	'filename',	'sample',	and 'group'. Any extra column names can be included as desired, but ‘filename’, sample’ and ‘group’ are necessary.\
+  The ‘sample’ column should contain the name that each individual sample will take after demultiplexing, and should not contain underscores or periods.\
+  The ‘group’ column can contain any group identifier (without spaces or slashes). Samples in different groups will be output into different subdirectories within the ‘trimmed’ directory at the end of the run. If you don’t need reads separated, use one group specifier for all samples, or just leave the column blank (but do keep the ‘group’ header).\
+  The ‘filename’ column should have the format:\
+  `{RunName}-{round2plate}-{well}-L{round1index}`\
+  with the ‘{RunName}-{round2plate}-{well}’ portion matching the corresponding ‘file’ entries in the fastq file list.\
+  The 'round1index' should match the 'phase' entry in the indexfordemux.sh table.\
+\
+ Some of the columns from the test sample sheet are shown below:
+
+| No	| RunName	| plate	| platename	| well	| R1index/phase	| R2 plate | our file name	| filename	| sample	| group |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 385	| 15mc-003	| P5	| plate5	| A01	| 4	| P08B01	| plateP-wellA1	| 15mc-003-P08B01-A01-L4	| P5-A01-plateP-wellA1	| group1 |
+| 386	| 15mc-003	| P5	| plate5	| A02	| 4	| P08B01	| plateP-wellA2	| 15mc-003-P08B01-A02-L4	| P5-A02-plateP-wellA2	| group1 |
+| 481	| 15mc-003	| P6	| plate6	| A01	| 5	| P08B01	| plateW-wellA5	| 15mc-003-P08B01-A01-L5	| P6-A01-plateW-wellA5	| group2 |
+| 482	| 15mc-003	| P6	| plate6	| A02	| 5	| P08B01	| plateW-wellA6	| 15mc-003-P08B01-A02-L5	| P6-A02-plateW-wellA6	| group2 |
+
+
+
+## Custom Primers
+The instructions and code above all assume the primers and indexes used are the standard 16S V4 sets presented in the paper. If custom primers/indexes are used, several changes will need to be made.
+
+1. **Update config/indexfordemux.txt**\
+Make sure the indexfordemux.txt file (which contains the indicies used for demultiplexing R1 indicies) included in the config directory and specified in the 'config.yaml' file corresponds to the appropriate region. We provide primer sequences and corresponding 'indexfordemux.txt' files for the following 16S regions: V1 - V2, V1 - V3, V2 - V3, V3, V3 - V4, V4 - V5, V5, V5 - V7, V6, V6 - V7, V6 - V8, and V7 - V9. These are provided in the 'other indexfordemux' folder here, along with an Excel worksheet showing how these were derived, with a template for making additional primers ('other indexfordemux.xlsx').\
+\
+If you want to amplify another region, you can use this template to make a custom 'indexfordemux.sh' file. (To make a custom 'indexfordemux.sh' file in the 'other indexfordemux.xlsx' file, replace the entries in 'geneF' with the first part of the gene sequence (5' - 3', coding strand) and the entries in 'geneR' with the end of the gene sequence (5' - 3', template strand)).\
+**(include image schematic of the reads with the index/spacer/genespecific region, etc?)**\
+\
+As a reminder, the final structure of reads after the library prep will look something like this (lengths not to scale):\
+  <img src="https://github.com/KCHuang-Lab/CUPID-seq/blob/main/docs/images/primerStructureImage.png?raw=true" alt="Alt Text" width="400" height="400">\
+The round 1 indexes have variable lengths or ‘phases’ as shown in the table and image below:
+
+| phase | variable FP | variable RP |
+| --- | --- | --- |
+| 0 |  |ATGGACT |
+| 1 | T | GCTAGC |
+| 2 | GG  | TGACT |
+| 3 | ACT | CGGT |
+| 4 | TAAC | GTA |
+| 5 | CAGTC | AA |
+| 6 | ATCGAT | C|
+| 7 | GCAAGTC  | |
+
+ <img src="https://github.com/KCHuang-Lab/CUPID-seq/blob/main/docs/images/phasedPrimerImage.png?raw=true" alt="Alt Text" width="400" height="400">
+
+However, during the demultiplexing, we treat the reads as if they have 7 base pair indexes on both ends. Any of the 7 base pairs that are not filled in with the index will be the spacer/gene-specific primer sequence. The table below shows the default indexes, with the actual index base pairs underlined, the spacer base pairs in lowercase, and the gene-specific primer regions uppercase and bolded. (The ‘bc’ or barcode column is simply the concatenated strings of read1index and read2index). The index, spacer, and gene specific regions will need to be edited according to the changes made.\
+
+| phase | read1index | read2index | bc |
+| --- | --- | --- | --- |
+| 0 | cagt**AGA** | <ins>ATGGACT</ins> | CAGTAGAATGGACT | 
+| 1 | <ins>T</ins>cagt**AG** | <ins>GCTAGC</ins>a | TCAGTAGGCTAGCA | 
+| 2 | <ins>GG</ins>cagt**A** | <ins>TGACT</ins>at | GGCAGTATGACTAT | 
+| 3 | <ins>ACT</ins>cagt | <ins>CGGT</ins>atc | ACTCAGTCGGTATC | 
+| 4 | <ins>TAAC</ins>cag | <ins>GTA</ins>atcc | TAACCAGGTAATCC | 
+| 5 | <ins>CAGTC</ins>ca | <ins>AA</ins>atcc**T** | CAGTCCAAAATCCT | 
+| 6 | <ins>ATCGAT</ins>c | <ins>C</ins>atcc**TA** | ATCGATCCATCCTA | 
+| 7 | <ins>GCAAGTC</ins> | atcc**TAC** | GCAAGTCATCCTAC |
+
+If the same primer design and index scheme is used, and only the gene-specific region is changed, only the gene-specific regions within the indices will need to be updated. For the primers above, the gene of interest starts with 'AGA...' and ends with 'GTA' on the forward strand, hence the regions of homology include 'AGA' and 'TAC', both in the 5' to 3' direction.\
+\
+For a gene reading 'ATG ... CGT', the regions of homology within primers would become 'ATG' and 'ACG', both in the 5' to 3' direction. Thus the indexfordemux table should be edited to:
+
+| phase | read1index | read2index | bc |
+| --- | --- | --- | --- |
+| 0 | cagt**ATG** | <ins>ATGGACT</ins> | CAGTAGAATGGACT | 
+| 1 | <ins>T</ins>cagt**AT** | <ins>GCTAGC</ins>a | TCAGTAGGCTAGCA | 
+| 2 | <ins>GG</ins>cagt**A** | <ins>TGACT</ins>at | GGCAGTATGACTAT | 
+| 3 | <ins>ACT</ins>cagt | <ins>CGGT</ins>atc | ACTCAGTCGGTATC | 
+| 4 | <ins>TAAC</ins>cag | <ins>GTA</ins>atcc | TAACCAGGTAATCC | 
+| 5 | <ins>CAGTC</ins>ca | <ins>AA</ins>atcc**A** | CAGTCCAAAATCCT | 
+| 6 | <ins>ATCGAT</ins>c | <ins>C</ins>atcc**AC** | ATCGATCCATCCTA | 
+| 7 | <ins>GCAAGTC</ins> | atcc**ACG** | GCAAGTCATCCTAC |
+
+Note that only the gene-specific regions have changed, and the index and spacer sequences are identical to the initial set.
+
+__Note:__ We recommend avoiding any mixed base characters such as ‘W’ or ‘N’ in the first three positions of your gene specific primer. If such bases are included, you will need to include extra entries in the indexfordemux.txt table, one for each potential base (e.g., for a ‘W’, one version should have an ‘A’ and one should have a ‘T’). Each sample with a mixed base index should thus be included twice in the samplesheet, and the output files will then need to be merged downstream (either after trimming or after subsequent analyses).
+
+2. **Update the index lengths in config/config.yaml**\ 
+Within the ‘config/config.yaml’ file, the index/primer lengths may need to be updated. The “lenR1index” and “lenR2index” should be set to the longest version of these (e.g., in the provided primer/index set, the longest sequence of index bases is 7, so the value is set to 7). The “lenR1primer” and “lenR2primer” values should be set to equal the length of the gene-specific primer sequence plus the length of the spacer. For the 16S sets with provided indexfordemux.txt files (V1 - V2, V1 - V3, V2 - V3, V3, V3 - V4, V4 - V5, V5, V5 - V7, V6, V6 - V7, V6 - V8, and V7 - V9), the lengths do not need to be changed; the defaults below are correct.
+
+| Region | length | 
+| --- | --- | 
+| lenR1primer |  23 | 
+| lenR2primer | 24 | 
+| lenR1index | 7 | 
+| lenR2index | 7 |
