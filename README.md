@@ -47,6 +47,7 @@ Once seqeuncing data is back from Biohub, the first round of demultiplexing (bas
 
 
 ## Run on Sherlock using Singularity/Apptainer
+Add things here...
 
 ## Inputs
 In addition to the sequencing data itself, there are two input files needed for demultiplexing: a fastq file list, and a sample sheet. Additionally, the included config.yaml file will need to be edited.\
