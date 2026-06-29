@@ -15,7 +15,7 @@ The following document describes how to use the Docker and Singularity/Apptainer
 * [Run on Sherlock using Singularity/Apptainer](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#run-on-sherlock-using-singularity/apptainer)
 * [Inputs](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#inputs)
 * [Custom Primers](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#custom-primers)
-* [Building Singularity/Apptainer Image](https://github.com/KCHuang-Lab/demux-dada2/blob/main/README.md#building-singularity/apptainer-image)
+* [Building Singularity/Apptainer Image](https://github.com/KCHuang-Lab/demux-dada2/tree/main#building-singularityapptainer-image)
 
 
 ## Overview
@@ -185,7 +185,7 @@ Within the ‘config/config.yaml’ file, the index/primer lengths may need to b
 | lenR1index | 7 | 
 | lenR2index | 7 |
 
-## Building Singalarity/Apptainer Image
+## Building Singularity/Apptainer Image
 1. All necessary files are included in this demux-dada2 repository. Clone the repository onto Sherlock. We recommend doing this once for each Sherlock group, and then reusing the image and files for all subsequent analyses. The ‘XXX16s-demux.def’ and ‘XXXrequirements.txt’ are both needed for the building process, and the fastq_data contains example data for the test. All of the code is contained within the ‘16S-demux’ directory, and outputs will be generated there as well.
 
 
