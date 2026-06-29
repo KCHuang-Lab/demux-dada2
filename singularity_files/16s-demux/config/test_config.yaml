@@ -1,0 +1,17 @@
+# Samplesheet for sample demultiplexing and file naming.
+samplesheet: "config/test_samplesheet.txt"
+indices: "config/indexfordemux.txt"
+fastqlist: "config/test_fastq.txt"
+lenR1primer: "23"
+lenR2primer: "24"
+lenR1index: "7"
+lenR2index: "7"
+
+# Input directories.
+fastqdir: ""
+demux: "workflow/rules/demux.sh"
+
+# Output directories.
+demuxdir: "workflow/test_out/demux"
+trimdir: "workflow/test_out/trimmed"
+outdir: "workflow/test_out/"

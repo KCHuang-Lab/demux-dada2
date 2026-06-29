@@ -1,0 +1,5 @@
+read1	read2	file
+../fastq_data/test_inputs/KKRP-001_S441_R1_001.fastq.gz	../fastq_data/test_inputs/KKRP-001_S441_R2_001.fastq.gz	15mc-003-P08B01-A01
+../fastq_data/test_inputs/KKRP-002_S442_R1_001.fastq.gz	../fastq_data/test_inputs/KKRP-002_S442_R2_001.fastq.gz	15mc-003-P08B01-A02
+../fastq_data/test_inputs/KKRP-003_S443_R1_001.fastq.gz	../fastq_data/test_inputs/KKRP-003_S443_R2_001.fastq.gz	15mc-003-P08B01-A03
+../fastq_data/test_inputs/KKRP-004_S444_R1_001.fastq.gz	../fastq_data/test_inputs/KKRP-004_S444_R2_001.fastq.gz	15mc-003-P08B01-A04

@@ -1,0 +1,9 @@
+No	RunName	plate	platename	well	R1index/phase	R2 plate	our file name	filename	sample	group
+385	15mc-003	P5	plate5	A01	4	P08B01	plateP-wellA1	15mc-003-P08B01-A01-L4	P5-A01-plateP-wellA1	group1
+386	15mc-003	P5	plate5	A02	4	P08B01	plateP-wellA2	15mc-003-P08B01-A02-L4	P5-A02-plateP-wellA2	group1
+387	15mc-003	P5	plate5	A03	4	P08B01	plateP-wellA3	15mc-003-P08B01-A03-L4	P5-A03-plateP-wellA3	group1
+388	15mc-003	P5	plate5	A04	4	P08B01	plateP-wellA4	15mc-003-P08B01-A04-L4	P5-A04-plateP-wellA4	group1
+481	15mc-003	P6	plate6	A01	5	P08B01	plateW-wellA5	15mc-003-P08B01-A01-L5	P6-A01-plateW-wellA5	group2
+482	15mc-003	P6	plate6	A02	5	P08B01	plateW-wellA6	15mc-003-P08B01-A02-L5	P6-A02-plateW-wellA6	group2
+483	15mc-003	P6	plate6	A03	5	P08B01	plateW-wellA7	15mc-003-P08B01-A03-L5	P6-A03-plateW-wellA7	group2
+484	15mc-003	P6	plate6	A04	5	P08B01	plateW-wellA8	15mc-003-P08B01-A04-L5	P6-A04-plateW-wellA8	group2
