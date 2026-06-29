@@ -191,8 +191,8 @@ Within the ‘config/config.yaml’ file, the index/primer lengths may need to b
 2. Move to the directory containing the def file (16s-demux.def) and run the following:\
 `sbatch slurmBuild.sh`
 \
-The image will be created locally and a file ‘demux-dada2-image.sif’ will be created in the current working directory. The build may take about 1 hour.
+The image will be created locally and a file ‘demux-dada2-image.sif’ will be created in the current working directory. The build may take about 1 to 2 hours.
 
 __Note:__ This step will likely require more resources than are available on a HPC login node, so be sure you are on a compute node by running `sh_dev` before step 2, or use a job manager to allocate resources. A template slurm script is included in the demux-dada2.zip file, named 'slurmBuild.sh'. You may choose to change the node/memory/timing steps based on your system.
 
-3. Edit the paths in line 4 of both Snakefile and test_Snakefile from `"/home/groups/kchuang/16s-demux-dada2/demux-dada2-image.sif"` to the path of the `demux-dada2-image.sif` file you just created. 
+3. Edit the Snakefile and test_Snakefile to include `singularity: "/path/to/demux-dada2-image.sif"`, with the path of the `demux-dada2-image.sif` file you just created. 
