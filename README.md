@@ -186,8 +186,7 @@ Within the ‘config/config.yaml’ file, the index/primer lengths may need to b
 | lenR2index | 7 |
 
 ## Building Singularity/Apptainer Image
-1. All necessary files are included in this demux-dada2 repository. Clone the repository onto Sherlock. We recommend doing this once for each Sherlock group, and then reusing the image and files for all subsequent analyses. The ‘XXX16s-demux.def’ and ‘XXXrequirements.txt’ are both needed for the building process, and the fastq_data contains example data for the test. All of the code is contained within the ‘16S-demux’ directory, and outputs will be generated there as well.
-
+1. All necessary files are included in this demux-dada2 repository. Clone the repository onto Sherlock. We recommend doing this once for each Sherlock group, and then reusing the image and files for all subsequent analyses. The ‘dada2.def’,'install_packages_4_2_0.r', and ‘requirements.txt’ are all needed for the building process, and a Slurm submission script for the building step is included as `slurmBuild.sh`. The fastq_data directory contains example data for the test, and the databases directory contains GreenGenes and Silva databases for testing and real analyses. All of the code is contained within the ‘16S-demux’ directory, and outputs will be generated there as well.
 
 2. Move to the directory containing the def file (16s-demux.def) and run the following:\
 `singularity build demux-dada2-image.sif 16s-demux.def`\
