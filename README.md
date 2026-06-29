@@ -189,12 +189,9 @@ Within the ‘config/config.yaml’ file, the index/primer lengths may need to b
 1. All necessary files are included in this demux-dada2 repository. Clone the repository onto Sherlock. We recommend doing this once for each Sherlock group, and then reusing the image and files for all subsequent analyses. The ‘dada2.def’,'install_packages_4_2_0.r', and ‘requirements.txt’ are all needed for the building process, and a Slurm submission script for the building step is included as `slurmBuild.sh`. The fastq_data directory contains example data for the test, and the databases directory contains GreenGenes and Silva databases for testing and real analyses. All of the code is contained within the ‘16S-demux’ directory, and outputs will be generated there as well.
 
 2. Move to the directory containing the def file (16s-demux.def) and run the following:\
-`singularity build demux-dada2-image.sif 16s-demux.def`\
+`sbatch slurmBuild.sh`
 \
-The image will be created locally and a file ‘demux-image.sif’ will be created in the current working directory. The build may take about 1 hourXXX, and if it is completed successfully, the the final output will look something like this:\
-<img src="https://github.com/KCHuang-Lab/CUPID-seq/blob/main/docs/images/buildSuccessOutput.png?raw=true" alt="Alt Text" width="750" height="400">\
-\
-Once completed, the file 'demux-dada2.sif' should be found in the current working directory.
+The image will be created locally and a file ‘demux-dada2-image.sif’ will be created in the current working directory. The build may take about 1 hour.
 
 __Note:__ This step will likely require more resources than are available on a HPC login node, so be sure you are on a compute node by running `sh_dev` before step 2, or use a job manager to allocate resources. A template slurm script is included in the demux-dada2.zip file, named 'slurmBuild.sh'. You may choose to change the node/memory/timing steps based on your system.
 
