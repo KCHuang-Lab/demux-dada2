@@ -9,4 +9,4 @@
 # SBATCH --mail-user=youremail@email.com
 # SBATCH -p nodeName
 
-singularity build both.sif dada2.def
+singularity build demux-dada2.sif dada2.def
