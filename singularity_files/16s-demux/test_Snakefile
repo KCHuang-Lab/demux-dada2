@@ -1,6 +1,7 @@
 from os.path import join
 import pandas as pd
 
+singularity: ""
 configfile: "config/test_config.yaml"
 
 # Import list of sample names and metadata.
